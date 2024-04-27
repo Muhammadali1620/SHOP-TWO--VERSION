@@ -72,7 +72,7 @@ class FeatureValue(models.Model):
 
 class ProductFeature(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='products')
-    feature_value = models.ManyToManyField(FeatureValue, related_name='features', blank=True)
+    feature_value = models.ManyToManyField(FeatureValue, related_name='product_features', blank=True)
     quantity = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1)])
     price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(0)], help_text="Narxni so'mda kiriting")
     

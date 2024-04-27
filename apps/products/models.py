@@ -4,8 +4,6 @@ from apps.categories.models import MainCategory, SubCategory
 from django.core.exceptions import ValidationError
 from django.utils.translation import get_language
 from apps.general.services import normalize_text
-from apps.products.services import get_usd_price
-from math import ceil
 
 
 class Product(models.Model):
@@ -44,16 +42,6 @@ class Product(models.Model):
     
     def get_category(self):
         return self.main_category or self.sub_category
-
-    def get_price_in_usd(self):
-        in_usd = get_usd_price()
-        price = float(self.price) / in_usd
-        return ceil(price)
-
-    def get_old_price_in_usd(self):
-        in_usd = get_usd_price()
-        price = float(self.old_price) / in_usd
-        return ceil(price)
 
     def clean(self):
         if (bool(self.main_category) + bool(self.sub_category)) != 1:
