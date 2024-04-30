@@ -1,9 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from apps.contacts.forms import ContactCreateForm
-from apps.contacts.models import Contact
-from apps.general.models import General
-from apps.categories.models import MainCategory
 
 
 def contacts(request):
