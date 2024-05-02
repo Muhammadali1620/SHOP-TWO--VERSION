@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from apps.features.models import Feature
 from django.db.models import F, Q
 from apps.products.models import Product
 from math import ceil
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
+
+from apps.wishlists.models import Wishlist
 
 
 def product_list(request):
@@ -48,11 +50,8 @@ def product_list(request):
     pageinator = Paginator(products, 9)
     number_page = request.GET.get('page', '1')
     page_obj = pageinator.get_page(number_page)
-        
-
     context={
         'page_obj':page_obj,
-        'products':products,
         'features':features,
         # 'previouse':int(page) - minus,
         # 'next':int(page) + plus,
@@ -67,3 +66,27 @@ def product_detail(request, pk):
         'product':product
     } 
     return render(request, template_name='products/product_detail.html', context=context)
+
+
+def product_wishlist(request, pk):
+    user = request.user
+    obj = Wishlist.objects.get_or_create(user_id=user.pk, product_id=pk)
+    if not user.is_authenticated:
+        return redirect('register-page')
+    if False in obj:
+        Wishlist.objects.get(user_id=user.pk, product_id=pk).delete()
+    return redirect('product-list')
+
+
+def wishlist(request):
+    user = request.user
+    products = Wishlist.objects.filter(user_id=user.pk)
+    if not user.is_authenticated:
+        return redirect('register-page')
+    pageinator = Paginator(products, 9)
+    number_page = request.GET.get('page', '1')
+    page_obj = pageinator.get_page(number_page)
+    context = {
+        'page_obj':page_obj
+    }
+    return render(request, template_name='products/product_wishlist.html', context=context)
