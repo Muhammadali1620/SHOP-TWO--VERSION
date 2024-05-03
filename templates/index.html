@@ -110,7 +110,11 @@
                 <a class="text-decoration-none" href="">
                     <div class="cat-item d-flex align-items-center mb-4">
                         <div class="overflow-hidden" style="width: 100px; height: 100px;">
-                            <img class="img-fluid" src="{% static 'img/cat-2.jpg' %}" alt="">
+                            {% if category.image %}
+                                <img class="img-fluid w-100" src="{{ category.image.url }}" alt="">
+                            {% else %}
+                                <img class="img-fluid w-100" src="{% static 'img/no_image.png' %}" alt="">
+                            {% endif %}
                         </div>
                         <div class="flex-fill pl-3">
                             <h6>{{ category.get_title }}</h6>
@@ -133,10 +137,14 @@
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
+                        {% if featured_product.first_image %}
+                            <img class="img-fluid w-100" src="{{ featured_product.first_image.image.url }}" alt="">
+                        {% else %}
+                            <img class="img-fluid w-100" src="{% static 'img/no_image.png' %}" alt="">
+                        {% endif %}
                         <div class="product-action">
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="{% url 'product-wishlist' pk=featured_product.pk %}"><img {% if featured_product.pk in user_wishlist %} src="{% static 'img/heart-active.jpg' %}" {% else %} src="{% static 'img/heart-disable.jpg' %}" {% endif %} alt=""></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
                         </div>
@@ -144,11 +152,7 @@
                     <div class="text-center py-4">
                         <a class="h6 text-decoration-none text-truncate" href="">{{ featured_product.get_title }}</a>
                         <div class="d-flex align-items-center justify-content-center mt-2">
-                            {% if request.sessioon.currency == '1' %}
-                                <h5>{{ featured_product.price }}</h5><h6 class="text-muted ml-2"><del>{{ featured_product.old_price }}</del></h6>
-                            {% else %}
-                                <h5>{{ featured_product.get_price_in_usd }}</h5><h6 class="text-muted ml-2"><del>{{ featured_product.get_old_price_in_usd }}</del></h6>
-                            {% endif %}
+                            <h5>123$</h5>
                         </div>
                         <div class="d-flex align-items-center justify-content-center mb-1">
                             <small class="fa fa-star text-primary mr-1"></small>
@@ -203,10 +207,14 @@
             <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
                 <div class="product-item bg-light mb-4">
                     <div class="product-img position-relative overflow-hidden">
-                        <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">
+                        {% if recent_product.first_image %}
+                            <img class="img-fluid w-100" src="{{ recent_product.first_image.image.url }}" alt="">
+                        {% else %}
+                            <img class="img-fluid w-100" src="{% static 'img/no_image.png' %}" alt="">
+                        {% endif %}
                         <div class="product-action">
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="{% url 'product-wishlist' pk=recent_product.pk %}"><img {% if recent_product.pk in user_wishlist %} src="{% static 'img/heart-active.jpg' %}" {% else %} src="{% static 'img/heart-disable.jpg' %}" {% endif %} alt=""></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
                         </div>
@@ -214,11 +222,7 @@
                     <div class="text-center py-4">
                         <a class="h6 text-decoration-none text-truncate" href="">{{ recent_product.get_title }}</a>
                         <div class="d-flex align-items-center justify-content-center mt-2">
-                            {% if request.sessioon.currency == '1' %}
-                                <h5>{{ recent_product.price }}</h5><h6 class="text-muted ml-2"><del>{{ recent_product.old_price }}</del></h6>
-                            {% else %}
-                                <h5>{{ recent_product.get_price_in_usd }}</h5><h6 class="text-muted ml-2"><del>{{ recent_product.get_old_price_in_usd }}</del></h6>
-                            {% endif %}
+                            <h5>123$</h5>
                         </div>
                         <div class="d-flex align-items-center justify-content-center mb-1">
                             <small class="fa fa-star text-primary mr-1"></small>

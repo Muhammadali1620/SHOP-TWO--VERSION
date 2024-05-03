@@ -46,6 +46,12 @@ class Product(models.Model):
     def clean(self):
         if (bool(self.main_category) + bool(self.sub_category)) != 1:
             raise ValidationError('bittasini tanla')
+        
+    def feature(self):
+        return self.product_features.order_by('price').first()
+        
+    def first_image(self):
+        return self.image_product.first()
 
     def __str__(self):
         return self.title_uz
@@ -53,7 +59,7 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     image = models.ImageField(upload_to='products/%Y/%m/%d/')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='image_product')
     ordering_number = models.PositiveSmallIntegerField()
 
     def __str__(self):

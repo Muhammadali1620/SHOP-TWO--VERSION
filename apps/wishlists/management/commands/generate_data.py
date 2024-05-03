@@ -5,7 +5,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         os.system('python manage.py makemigrations')
         os.system('python manage.py migrate')
-        os.system('python manage.py createsuperuser')
         os.system('python manage.py generate_users')
         os.system('python manage.py generate_categories')
         os.system('python manage.py generate_contacts')

@@ -42,10 +42,10 @@ def product_list(request):
             if request.session.get('select_sub_cat_id'):
                 del request.session['select_sub_cat_id']
     if request.session.get('select_sub_cat_id'):
-        features = Feature.objects.filter(sub_category_id=request.session['select_sub_cat_id'])[:5]
+        features = Feature.objects.filter(sub_category_id=request.session['select_sub_cat_id'])[:5].prefetch_related('values')
         products = Product.objects.filter(sub_category_id=request.session['select_sub_cat_id'])
     else:
-        features = Feature.objects.all().order_by('-pk')[:5]
+        features = Feature.objects.all().order_by('-pk')[:5].prefetch_related('values')
 
     pageinator = Paginator(products, 9)
     number_page = request.GET.get('page', '1')
@@ -70,9 +70,9 @@ def product_detail(request, pk):
 
 def product_wishlist(request, pk):
     user = request.user
-    obj = Wishlist.objects.get_or_create(user_id=user.pk, product_id=pk)
     if not user.is_authenticated:
         return redirect('register-page')
+    obj = Wishlist.objects.get_or_create(user_id=user.pk, product_id=pk)
     if False in obj:
         Wishlist.objects.get(user_id=user.pk, product_id=pk).delete()
     return redirect('product-list')
@@ -80,9 +80,9 @@ def product_wishlist(request, pk):
 
 def wishlist(request):
     user = request.user
-    products = Wishlist.objects.filter(user_id=user.pk)
     if not user.is_authenticated:
         return redirect('register-page')
+    products = Wishlist.objects.filter(user_id=user.pk)
     pageinator = Paginator(products, 9)
     number_page = request.GET.get('page', '1')
     page_obj = pageinator.get_page(number_page)

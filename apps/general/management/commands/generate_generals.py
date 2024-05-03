@@ -41,7 +41,7 @@ class Command(BaseCommand):
         last = Branch.objects.all().order_by('-pk').first()
         branch = [
             Branch(title_uz=f'title_uz No {i}', slug=f'slug-no-{i}', title_ru=f'title_ru No {i}')
-            for i in range(last.pk + 1 if last else 1, last.pk + 7 if last else 6)
+            for i in range(last.pk + 1 if last else 1, last.pk + 9 if last else 9)
         ]
         Branch.objects.bulk_create(branch)
         self.stdout.write(self.style.SUCCESS(f'{Branch.objects.count()} branch created'))

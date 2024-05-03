@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
         subcategory = [SubCategory(main_category_id=main.pk, 
                         name_uz=f'Sub category NO {i}', 
-                        name_ru = f'Sub category NO {i}. ru', 
+                        name_ru = f'sub-category-no-{i}ru', 
                         slug = f'sub-category-{main}-no-{i}')
             for i in range(1, 4)
             for main in MainCategory.objects.all()
