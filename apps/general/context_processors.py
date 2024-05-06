@@ -19,5 +19,5 @@ def general(request):
             'paymentmethods':paymentmethods,
             'branchs':branchs,
             'services':services,
-            'banners':banners   
+            'banners':banners
             }

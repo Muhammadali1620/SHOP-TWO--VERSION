@@ -142,10 +142,10 @@
                                     <a href="main_category={{ category.pk }}" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ category.get_title }} <i class="fa fa-angle-right float-right mt-1"></i></a>
                                         <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
                                             {% for i in category.sub_cat.all %}
-                                                {% if select_sub_cat_id != i.pk %}
+                                                {% if request.session.select_sub_cat_id != i.pk %}
                                                     <a href="{% url 'product-list' %}?sub_category={{ i.pk }}" class="dropdown-item">{{ i.get_title }}</a>
                                                 {% else %}
-                                                    <a href="{% url 'product-list' %}?sub_category={{ i.pk }}" class="dropdown-item active">{{ i.get_title }}</a>
+                                                    <a href="{% url 'product-list' %}?sub_category={{ i.pk }}" class="dropdown-item active" style="color: inherit;">{{ i.get_title }}</a>
                                                 {% endif %}
                                             {% endfor %}
                                         </div>

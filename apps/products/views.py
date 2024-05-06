@@ -47,9 +47,9 @@ def product_list(request):
     else:
         features = Feature.objects.all().order_by('-pk')[:5].prefetch_related('values')
 
-    pageinator = Paginator(products, 9)
+    paginator = Paginator(products, 9)
     number_page = request.GET.get('page', '1')
-    page_obj = pageinator.get_page(number_page)
+    page_obj = paginator.get_page(number_page)
     context={
         'page_obj':page_obj,
         'features':features,
@@ -71,21 +71,21 @@ def product_detail(request, pk):
 def product_wishlist(request, pk):
     user = request.user
     if not user.is_authenticated:
-        return redirect('register-page')
-    obj = Wishlist.objects.get_or_create(user_id=user.pk, product_id=pk)
-    if False in obj:
-        Wishlist.objects.get(user_id=user.pk, product_id=pk).delete()
-    return redirect('product-list')
+        return redirect('login_page')
+    obj, created = Wishlist.objects.get_or_create(user_id=user.pk, product_id=pk)
+    if not  created:
+        obj.delete()
+    return redirect(request.META['HTTP_REFERER'])
 
 
 def wishlist(request):
     user = request.user
     if not user.is_authenticated:
-        return redirect('register-page')
-    products = Wishlist.objects.filter(user_id=user.pk)
-    pageinator = Paginator(products, 9)
+        return redirect('login_page')
+    products = Wishlist.objects.filter(user_id=user.pk).order_by('-pk')
+    paginator = Paginator(products, 9)
     number_page = request.GET.get('page', '1')
-    page_obj = pageinator.get_page(number_page)
+    page_obj = paginator.get_page(number_page)
     context = {
         'page_obj':page_obj
     }

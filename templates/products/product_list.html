@@ -62,13 +62,9 @@
                                         <a class="dropdown-item" href="#">Best Rating</a>
                                     </div>
                                 </div>
-                                <div class="btn-group ml-2">
-                                    <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">Showing</button>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#">10</a>
-                                        <a class="dropdown-item" href="#">20</a>
-                                        <a class="dropdown-item" href="#">30</a>
-                                    </div>
+                                <div class="ml-2">
+                                    <div class="btn-group"></div>
+                                    <span>{{ page_obj.paginator.count }}</span>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +82,7 @@
                                         <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
                                         <a class="btn btn-outline-dark btn-square" href="{% url 'product-wishlist' pk=product.pk %}"><img {% if product.pk in user_wishlist %} src="{% static 'img/heart-active.jpg' %}" {% else %} src="{% static 'img/heart-disable.jpg' %}" {% endif %} alt=""></a>
                                         <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                                        <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+                                        <a class="btn btn-outline-dark btn-square" href="{% url 'product-detail' pk=product.pk %}"><i class="fa fa-search"></i></a>
                                     </div>
                                 </div>
                                 <div class="text-center py-4">
@@ -111,34 +107,34 @@
                             <ul class="pagination justify-content-center">
                                 {% if page_obj.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page=1">First</a>
+                                    <a class="page-link" style="color: inherit;" href="?page=1">First</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                    <a class="page-link" style="color: inherit;" href="?page={{ page_obj.previous_page_number }}">Previous</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                                    <a class="page-link" style="color: inherit;" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
                                 </li>
                                 {% else %}
-                                <li class="page-item disabled"><a class="page-link">First</a></span></li>
-                                <li class="page-item disabled"><a class="page-link">Previous</span></a></li> 
+                                <li class="page-item disabled"><a class="page-link" style="color: inherit;">First</a></li>
+                                <li class="page-item disabled"><a class="page-link" style="color: inherit;">Previous</a></li> 
                                 {% endif %}
                                 <li class="page-item active">
-                                    <a class="page-link">{{ page_obj.number }}</a>
+                                    <a class="page-link" style="color: inherit;">{{ page_obj.number }}</a>
                                 </li>
                                 {% if page_obj.has_next %}
                                 <li class="page-item ">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                                    <a class="page-link" style="color: inherit;" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                    <a class="page-link" style="color: inherit;" href="?page={{ page_obj.next_page_number }}">Next</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                                    <a class="page-link" style="color: inherit;" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
                                 </li>
                                 {% else %}
-                                <li class="page-item disabled"><a class="page-link">Next</a></span></li>
-                                <li class="page-item disabled"><a class="page-link">Last</span></a></li> 
+                                <li class="page-item disabled"><a class="page-link" style="color: inherit;">Next</a></li>
+                                <li class="page-item disabled"><a class="page-link" style="color: inherit;">Last</a></li> 
                                 {% endif %}
                             </ul>
                         </nav>
@@ -147,7 +143,7 @@
             </div>
             <!-- Shop Product End -->
         </div>
-    </div>
+    </div> 
     <!-- Shop End -->
 
 {% endblock  %}

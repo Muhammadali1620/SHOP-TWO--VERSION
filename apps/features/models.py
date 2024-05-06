@@ -68,6 +68,7 @@ class FeatureValue(models.Model):
 
     class Meta:
         unique_together = ('feature', 'slug')
+     
 
 
 class ProductFeature(models.Model):

@@ -13,8 +13,9 @@ class FeatureAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at','updated_at',)
     prepopulated_fields = {'slug':['name_uz']}
     list_display_linsk = ('main_category', 'sub_category')
-    list_filter = ['main_category','sub_category']
+    #list_filter = ['main_category','sub_category']
     search_fields = ['name_uz', 'name_ru']
     search_help_text = f'Serch from fields({search_fields})'
     list_editable = ['name_uz', 'name_ru']
     inlines = [FeatureValueInlineAdmin]
+    list_select_related = ('sub_category', 'main_category', 'sub_category__main_category')

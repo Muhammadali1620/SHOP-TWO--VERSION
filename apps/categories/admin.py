@@ -15,7 +15,7 @@ class MainCategoryAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at','updated_at')
     prepopulated_fields = {'slug':['name_uz']}
     inlines = [SubCategoryInline]
-    list_display_linsk = ('pk')
+    list_display_links = ('pk',)
     search_fields = ['name_uz','name_ru']
     search_help_text = f'Serch from fields({search_fields})'
     list_editable = ['name_uz', 'name_ru']

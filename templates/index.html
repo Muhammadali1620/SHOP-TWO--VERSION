@@ -146,7 +146,7 @@
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
                             <a class="btn btn-outline-dark btn-square" href="{% url 'product-wishlist' pk=featured_product.pk %}"><img {% if featured_product.pk in user_wishlist %} src="{% static 'img/heart-active.jpg' %}" {% else %} src="{% static 'img/heart-disable.jpg' %}" {% endif %} alt=""></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="{% url 'product-detail' pk=featured_product.pk %}"><i class="fa fa-search"></i></a>
                         </div>
                     </div>
                     <div class="text-center py-4">
@@ -216,7 +216,7 @@
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
                             <a class="btn btn-outline-dark btn-square" href="{% url 'product-wishlist' pk=recent_product.pk %}"><img {% if recent_product.pk in user_wishlist %} src="{% static 'img/heart-active.jpg' %}" {% else %} src="{% static 'img/heart-disable.jpg' %}" {% endif %} alt=""></a>
                             <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
-                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href="{% url 'product-detail' pk=recent_product.pk %}"><i class="fa fa-search"></i></a>
                         </div>
                     </div>
                     <div class="text-center py-4">
