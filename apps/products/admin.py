@@ -1,7 +1,8 @@
 from django.contrib import admin
 from apps.features.models import ProductFeature
 from apps.products.models import Product, ProductImage
-from apps.products.forms import ProductFeatureForm, ProductForm
+from apps.products.forms import ProductForm
+from apps.features.forms import ProductFeatureForm
 
 
 class ProductImageInlineAdmin(admin.TabularInline):

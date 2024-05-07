@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from apps.categories.models import MainCategory
 from apps.features.models import Feature
 from django.db.models import F, Q
 from apps.products.models import Product
@@ -22,13 +23,16 @@ def product_list(request):
     # d = int(page) * 9 
     # limit = 0 + d
     # ofset = -9 + d    
+    feature_values = request.GET.getlist('feature_values')
     select_sub_cat_id = request.GET.get('sub_category', '0')
     query = request.GET.get('query', '')
     products = Product.objects.all().order_by('-pk')
     if query != '':
         request.session['query'] = query
+    else:
+        request.session['query'] = ''
     if request.session.get('query'):
-        products = Product.objects.filter(Q(title_uz__icontains=query) |
+        products = products.filter(Q(title_uz__icontains=query) |
                                           Q(title_ru__icontains=query) |
                                           Q(short_desc_uz__icontains=query) |
                                           Q(short_desc_ru__icontains=query) |
@@ -42,10 +46,15 @@ def product_list(request):
             if request.session.get('select_sub_cat_id'):
                 del request.session['select_sub_cat_id']
     if request.session.get('select_sub_cat_id'):
-        features = Feature.objects.filter(sub_category_id=request.session['select_sub_cat_id'])[:5].prefetch_related('values')
-        products = Product.objects.filter(sub_category_id=request.session['select_sub_cat_id'])
+        select_sub = request.session['select_sub_cat_id']
+        main = get_object_or_404(MainCategory, sub_cat__id=select_sub)
+        features = Feature.objects.filter(main_category_id=main.pk).order_by('ordering_number')[:5].prefetch_related('values')
+        products = products.filter(sub_category_id=select_sub)
     else:
-        features = Feature.objects.all().order_by('-pk')[:5].prefetch_related('values')
+        features = Feature.objects.all().order_by('ordering_number')[:5].prefetch_related('values')
+    
+    if feature_values:
+        products = products.filter(product_features__feature_value__id__in=feature_values).distinct()
 
     paginator = Paginator(products, 9)
     number_page = request.GET.get('page', '1')
@@ -53,6 +62,7 @@ def product_list(request):
     context={
         'page_obj':page_obj,
         'features':features,
+        'feature_values':list(map(int, feature_values))
         # 'previouse':int(page) - minus,
         # 'next':int(page) + plus,
         # 'end_page':end_page

@@ -63,7 +63,7 @@ class BannerAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':['title_uz']}
     readonly_fields = ('created_at','updated_at',)
     list_display_linsk = ('sub_category')
-    list_filter = ['sub_category']
+    #list_filter = ['sub_category']
     search_fields = ['title_uz', 'title_ru']
     search_help_text = f'Serch from fields({search_fields})'
     list_editable = ['title_uz', 'title_ru']

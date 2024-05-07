@@ -37,6 +37,8 @@ class Feature(models.Model):
         return ['name_uz', 'name_ru']
 
     def save(self, *args, **kwargs):
+        if self.sub_category:
+            self.main_category = self.sub_category.main_category
         normalize_text(self)
         super().save(*args, **kwargs)
 
@@ -78,8 +80,3 @@ class ProductFeature(models.Model):
     price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(0)], help_text="Narxni so'mda kiriting")
     
     created_at = models.DateTimeField(auto_now_add=True)
-    
-    # def clean(self):
-    #     if self.feature_value.feature.get_category() not in [self.product.main_category,
-    #                                                          self.product.sub_category] + list(self.product.main_category.subcategorymodel_set.all):
-    #         raise ValidationError({'feature_value':'Feature category not equal to product category'})

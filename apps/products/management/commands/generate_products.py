@@ -6,8 +6,7 @@ from apps.products.models import Product
 class Command(BaseCommand):
     def handle(self, *args, **options):
         last = Product.objects.all().order_by('-pk').first()
-        product = [Product(main_category_id=i if i % 2 == 0 else None, 
-                           sub_category_id=i if i % 2 != 0 else None, 
+        product = [Product(sub_category_id=i%9+1, 
                            title_uz=f'title_uz No {i}',
                            title_ru=f'title_ru No {i}',
                            slug=f'slug-no-{i}',

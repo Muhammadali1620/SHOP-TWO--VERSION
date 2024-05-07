@@ -37,6 +37,8 @@ class Product(models.Model):
         return ['title_uz', 'title_ru', 'short_desc_uz', 'short_desc_ru', 'long_desc_uz', 'long_desc_ru']
 
     def save(self, *args, **kwargs):
+        if self.sub_category:
+            self.main_category = self.sub_category.main_category
         normalize_text(self)
         super().save(*args, **kwargs)
     
