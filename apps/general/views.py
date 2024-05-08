@@ -7,7 +7,7 @@ from apps.products.models import Product
 
 def home(request):
     featured_products = Product.objects.all().order_by('?')[:8].prefetch_related('image_product')
-    recent_products = Product.objects.all().order_by('?')[:8].prefetch_related('image_product')
+    recent_products = Product.objects.all().order_by('-created_at')[:8].prefetch_related('image_product')
     branchs = Branch.objects.all()[:6]
     services = Service.objects.all()[:4]
     banners = Banner.objects.all()[:3]

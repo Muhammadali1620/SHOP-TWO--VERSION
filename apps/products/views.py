@@ -6,23 +6,10 @@ from apps.products.models import Product
 from math import ceil
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
-
 from apps.wishlists.models import Wishlist
 
 
 def product_list(request):
-    # c = Product.objects.count() / 9
-    # end_page = False
-    # plus = 1
-    # minus = 1
-    # if int(page) >= ceil(c):
-    #     end_page = True
-    #     plus = 0
-    # if int(page) <= 1:
-    #     minus = 0
-    # d = int(page) * 9 
-    # limit = 0 + d
-    # ofset = -9 + d    
     feature_values = request.GET.getlist('feature_values')
     select_sub_cat_id = request.GET.get('sub_category', '0')
     query = request.GET.get('query', '')
@@ -63,9 +50,6 @@ def product_list(request):
         'page_obj':page_obj,
         'features':features,
         'feature_values':list(map(int, feature_values))
-        # 'previouse':int(page) - minus,
-        # 'next':int(page) + plus,
-        # 'end_page':end_page
     }
     return render(request, template_name='products/product_list.html', context=context)
 
