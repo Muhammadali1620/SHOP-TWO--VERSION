@@ -1,19 +1,21 @@
+from apps.comments.models import Comment
 from django.shortcuts import render, redirect
 from apps.categories.models import MainCategory
-from apps.features.models import Feature
+from apps.features.models import Feature, ProductFeature
 from django.db.models import F, Q
 from apps.products.models import Product
 from math import ceil
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from apps.wishlists.models import Wishlist
+from django.db.models import Min
 
 
 def product_list(request):
     feature_values = request.GET.getlist('feature_values')
     select_sub_cat_id = request.GET.get('sub_category', '0')
     query = request.GET.get('query', '')
-    products = Product.objects.all().order_by('-pk')
+    products = Product.objects.filter(product_features__isnull=False).distinct().order_by('-pk')
     if query != '':
         request.session['query'] = query
     else:
@@ -46,6 +48,7 @@ def product_list(request):
     paginator = Paginator(products, 9)
     number_page = request.GET.get('page', '1')
     page_obj = paginator.get_page(number_page)
+
     context={
         'page_obj':page_obj,
         'features':features,
@@ -55,9 +58,25 @@ def product_list(request):
 
 
 def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+    try:
+        product = Product.objects.get(pk=pk)
+    except Product.DoesNotExist:
+        return redirect('product-list')
+    images = product.image_product.all().order_by('ordering_number')
+    price = product.product_features.aggregate(Min('price'))['price__min']
+    product.price = price
+    features = Feature.objects.filter(values__product_features__product_id=product.pk).distinct()
+    comments = Comment.objects.filter(product_id=product.pk)
+
+    paginator = Paginator(comments, 3)
+    number_page = request.GET.get('page', '1')
+    page_obj = paginator.get_page(number_page)
+
     context = {
-        'product':product
+        'product':product,
+        'images':images,
+        'features':features,
+        'comments':page_obj
     } 
     return render(request, template_name='products/product_detail.html', context=context)
 

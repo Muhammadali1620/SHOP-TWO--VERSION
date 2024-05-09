@@ -18,16 +18,13 @@ class Contact(models.Model):
            raise ValidationError('name and email are required')
         
     def save(self, *args, **kwargs):
+        normalize_text(self)
         if self.user:
             self.name, self.email = self.user.name, self.user.email
         super().save(*args, **kwargs)
     
     def get_normalize_fields(self):
         return ['title', 'message', 'name']
-
-    def save(self, *args, **kwargs):
-        normalize_text(self)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.name}:{self.title}'

@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from apps.categories.models import MainCategory
-from apps.general.models import Banner, Branch, General, Service
+from apps.general.models import Banner, Branch, Coupon, General, Service
 from apps.products.models import Product
 
 
@@ -22,4 +22,4 @@ def home(request):
         'banners_two':banners_two,
         'banners_three':banners_three,
     }
-    return render(request, template_name='index.html', context=context)
+    return render(request, template_name='index.html', context=context)  

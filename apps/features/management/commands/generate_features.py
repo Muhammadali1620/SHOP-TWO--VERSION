@@ -1,5 +1,6 @@
 from typing import Any
 from django.core.management import BaseCommand
+from apps.products.models import Product
 from apps.features.models import Feature, FeatureValue, ProductFeature
 
 
@@ -95,12 +96,13 @@ class Command(BaseCommand):
         # self.stdout.write(self.style.SUCCESS(f'{FeatureValue.objects.count()} featurevalue created'))
 
         last = ProductFeature.objects.all().order_by('-pk').first()
-        productfeature = [ProductFeature(product_id=i, 
+        productfeature = [ProductFeature(product_id=product.pk, 
                                          #feature_value_id=i,
                                          quantity=i, 
                                          price=1000 * i,
                                          )
-            for i in range(last.pk + 1 if last else 1, last.pk + 102 if last else 101)
+            for i in range(1,4)
+            for product in  Product.objects.all()
         ]
         ProductFeature.objects.bulk_create(productfeature)
         self.stdout.write(self.style.SUCCESS(f'{ProductFeature.objects.count()} productfeature created'))

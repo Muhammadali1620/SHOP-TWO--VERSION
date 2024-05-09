@@ -46,6 +46,7 @@ class PaymentMethod(models.Model):
 
 class General(models.Model):
     stor_name = models.CharField(max_length=20)
+    shipping = models.DecimalField(default=0, max_digits=20, decimal_places=2)
     logo = models.ImageField(upload_to='general/logotype/image/')
     phone_number = models.CharField(max_length=13, validators=[phone_validate])
     email = models.EmailField()

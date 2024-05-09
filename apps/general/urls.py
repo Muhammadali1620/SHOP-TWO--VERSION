@@ -1,4 +1,4 @@
-from apps.general.views import home
+from apps.general.views import   home
 from django.urls import path
 
 
