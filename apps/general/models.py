@@ -6,6 +6,8 @@ from django.utils.translation import get_language
 from apps.general.services import next_10_days, normalize_text
 from django.utils.timezone import now
 
+from apps.users.models import CustomUser
+
 
 class SocialLink(models.Model):
     icon = models.ImageField(upload_to='general/social_link/icon/', blank=True, null=True)
@@ -161,6 +163,18 @@ class Coupon(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @classmethod
+    def check_coupon(cls, request, code:str):
+        user = request.user
+        today = now().date()
+        coupon = cls.objects.filter(code=code, start_date__lte=today, end_date__gte=today).first()
+        used = UsedCupons.objects.filter(user=user.email, code=code)
+        if not coupon or used:
+            return None
+        else:
+            UsedCupons.objects.create(user=user.email, code=code)
+        return int(coupon.amount), coupon.amount_is_percent
     
     def get_normalize_fields(self):
         return ['title']
@@ -176,3 +190,8 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class UsedCupons(models.Model):
+    code = models.CharField(max_length=20)
+    user = models.CharField(max_length=300)

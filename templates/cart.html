@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
     <!-- Cart Start -->
     <div class="container-fluid">
@@ -17,7 +18,13 @@
                     <tbody class="align-middle">
                         {% for cart in carts %}
                             <tr>
-                                <td class="align-middle"><img src="{{ cart.productfeature.product.first_image.url }}" alt="" style="width: 50px;">{{ cart.productfeature.product.get_title }}</td>
+                                <td class="align-middle">
+                                    {% if cart.productfeature.product.first_image %}
+                                    <img src="{{ cart.productfeature.product.first_image.image.url }}" alt="" style="width: 50px;">
+                                    {% else %}
+                                    <img src="{% static 'img/no_image.png' %}" alt="" style="width: 50px;">
+                                    {% endif %}
+                                {{ cart.productfeature.product.get_title }}</td>
                                 <td class="align-middle">{{ cart.productfeature.price }}</td>
                                 <td class="align-middle">
                                     <div class="input-group quantity mx-auto" style="width: 100px;">
@@ -42,10 +49,13 @@
                 </table>
             </div>
             <div class="col-lg-4">
-                <form class="mb-30" method="post" action="">
+                <form class="mb-30" method="post">
                     {% csrf_token %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
                     <div class="input-group">
-                        <input type="text" name="code" class="form-control border-0 p-4" placeholder="Coupon Code">
+                        <input type="text" name="coupon_code" class="form-control border-0 p-4" placeholder="Coupon Code">
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-primary">Apply Coupon</button>
                         </div>
@@ -66,17 +76,36 @@
                                 <h6 class="font-weight-medium">0</h6>
                             {% endif %}
                         </div>
+                        <li></li>
+                        {% if request.session.is_percent %}
+                            <div class="d-flex justify-content-between">
+                                <h6 class="font-weight-medium">Coupon</h6>
+                                {% if request.session.is_percent %}
+                                    <h6 class="font-weight-medium">-{{ request.session.amount }}%</h6>
+                                {% else %}
+                                    <h6 class="font-weight-medium">-{{ request.session.amount }} UZS</h6>
+                                {% endif %}
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
-                            {% if store_data.shipping %}
-                                <h5>{{ store_data.shipping|add:subtotal }}</h5>
+                            {% if request.session.subamount %}
+                                {% if store_data.shipping %}
+                                    <h5>{{ store_data.shipping|add:request.session.subamount }} UZS</h5>
+                                {% else %}
+                                    <h5>{{ request.session.subamount }} UZS</h5>
+                                {% endif %}
                             {% else %}
-                                <h5>{{ subtotal }}</h5>
+                                {% if store_data.shipping %}
+                                    <h5>{{ store_data.shipping|add:subtotal }} UZS</h5>
+                                {% else %}
+                                    <h5>{{ subtotal }} UZS</h5>
+                                {% endif %}
                             {% endif %}
                         </div>
-                        <a href="{% url 'check_page' %}"><button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button></a>
+                        <a href="{% url 'check_page' %}"><button type="submit" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button></a>
                     </div>
                 </div>
             </div>

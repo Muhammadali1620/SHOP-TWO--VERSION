@@ -144,14 +144,33 @@
                                 <h6 class="font-weight-medium">0</h6>
                             {% endif %}
                         </div>
+                        <li></li>
+                        {% if request.session.is_percent %}
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Coupon</h6>
+                            {% if request.session.is_percent %}
+                                <h6 class="font-weight-medium">-{{ request.session.amount }}%</h6>
+                            {% else %}
+                                <h6 class="font-weight-medium">-{{ request.session.amount }} UZS</h6>
+                            {% endif %}
+                        </div>
+                        {% endif %}
                     </div>
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
-                            {% if store_data.shipping %}
-                                <h5>{{ store_data.shipping|add:subtotal }}UZS</h5>
+                            {% if request.session.subamount %}
+                                {% if store_data.shipping %}
+                                    <h5>{{ store_data.shipping|add:request.session.subamount }} UZS</h5>
+                                {% else %}
+                                    <h5>{{ request.session.subamount }} UZS</h5>
+                                {% endif %}
                             {% else %}
-                                <h5>{{ subtotal }}UZS</h5>
+                                {% if store_data.shipping %}
+                                    <h5>{{ store_data.shipping|add:subtotal }} UZS</h5>
+                                {% else %}
+                                    <h5>{{ subtotal }} UZS</h5>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
@@ -177,7 +196,7 @@
                                 <label class="custom-control-label" for="banktransfer">Bank Transfer</label>
                             </div>
                         </div>
-                        <button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
+                        <a href="{% url 'order_page' %}"><button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button></a>
                     </div>
                 </div>
             </div>

@@ -17,3 +17,10 @@ def check_page(request):
         'subtotal':sum(subtotal)
     }
     return render(request, template_name='checkout.html', context=context)
+
+
+def order_page(request):
+    request.session['amount'] = ''
+    request.session['is_percent'] = ''
+    request.session['subamount'] = ''
+    return redirect(request.META['HTTP_REFERER'])
