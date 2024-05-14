@@ -12,9 +12,9 @@ class OrderAdmin(admin.ModelAdmin):
 
     list_display_linsk = ('user', 'payment_method', 'total_price', 'delivery_price', 'coupon_price', 'is_paid',
                     'email', 'phone_number',)
-    list_filter = ['payment_method','is_paid']
     search_fields = ['total_price', 'delivery_price', 'coupon_price', 'email', 'phone_number']
     search_help_text = f'Serch from fields({search_fields})'
+    list_select_related = ['user', 'payment_method']
 
     def has_add_permission(self, request):
         return False
@@ -33,10 +33,11 @@ class OrderProductAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at',)
 
     list_display_linsk = ('product_feature', 'order')
-    list_filter = ['product_feature']
     search_fields = ['counts']
     search_help_text = f'Serch from fields({search_fields})'
     list_editable = ['counts']
+    list_select_related = ['order', 'order__user', 'product_feature', 'product_feature__product']
+
 
     def has_add_permission(self, request):
         return False

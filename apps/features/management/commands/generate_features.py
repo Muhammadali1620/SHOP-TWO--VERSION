@@ -99,7 +99,7 @@ class Command(BaseCommand):
         productfeature = [ProductFeature(product_id=product.pk, 
                                          #feature_value_id=i,
                                          quantity=i, 
-                                         price=1000 * i,
+                                         price=1000 * product.pk,
                                          )
             for i in range(1,4)
             for product in  Product.objects.all()

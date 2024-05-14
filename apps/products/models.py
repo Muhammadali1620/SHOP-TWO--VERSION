@@ -1,8 +1,8 @@
 from django.db import models
-from django.core.validators import MinValueValidator
 from apps.categories.models import MainCategory, SubCategory
 from django.core.exceptions import ValidationError
 from django.utils.translation import get_language
+from apps.features.models import FeatureValue
 from apps.general.services import normalize_text
 
 
@@ -35,7 +35,19 @@ class Product(models.Model):
     
     def get_normalize_fields(self):
         return ['title_uz', 'title_ru', 'short_desc_uz', 'short_desc_ru', 'long_desc_uz', 'long_desc_ru']
-
+    
+    def get_features(self):
+        features = {}
+        feature_values = FeatureValue.objects.filter(product_features__product_id=self.pk).distinct().select_related('feature')
+        for feature_value in feature_values:
+            feature_id = feature_value.feature_id
+            value = {'id':feature_value.pk, 'name':feature_value.get_value}
+            if feature_id not in features:
+                features[feature_id] = {'name':feature_value.feature.get_name, 'values':[value]}
+            else:
+                features[feature_id]['values'].append(value)
+        return features 
+    
     def save(self, *args, **kwargs):
         if self.sub_category:
             self.main_category = self.sub_category.main_category

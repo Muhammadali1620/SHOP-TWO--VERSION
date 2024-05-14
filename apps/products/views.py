@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from apps.wishlists.models import Wishlist
 from django.db.models import Min
+from django.contrib.auth.decorators import login_required
 
 
 def product_list(request):
@@ -65,9 +66,7 @@ def product_detail(request, pk):
     images = product.image_product.all().order_by('ordering_number')
     price = product.product_features.aggregate(Min('price'))['price__min']
     product.price = price
-    features = Feature.objects.filter(values__product_features__product_id=product.pk).distinct()
-    comments = Comment.objects.filter(product_id=product.pk)
-
+    comments = Comment.objects.filter(product_id=product.pk).order_by('-created_at')
     paginator = Paginator(comments, 3)
     number_page = request.GET.get('page', '1')
     page_obj = paginator.get_page(number_page)
@@ -75,16 +74,15 @@ def product_detail(request, pk):
     context = {
         'product':product,
         'images':images,
-        'features':features,
+        'features':product.get_features(),
         'comments':page_obj
     } 
     return render(request, template_name='products/product_detail.html', context=context)
 
 
+@login_required
 def product_wishlist(request, pk):
     user = request.user
-    if not user.is_authenticated:
-        return redirect('login_page')
     obj, created = Wishlist.objects.get_or_create(user_id=user.pk, product_id=pk)
     if not  created:
         obj.delete()

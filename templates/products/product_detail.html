@@ -39,17 +39,22 @@
                 <p class="mb-4">{{ product.get_short }}</p>
                 <form method="post" action="{% url 'add_to_cart' product.pk %}">
                 {% csrf_token %}
-                {% for feature in features %}
+                {% for feature_id, feature_value in features.items %}
                     <div class="d-flex mb-3">
-                        <strong class="text-dark mr-3">{{ feature.get_name }}</strong>
-                            {% for value in feature.values.all %}
+                        <strong class="text-dark mr-3">{{ feature_value.name }}</strong>
+                            {% for value in feature_value.values %}
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input value="{{ value.pk }}" {% if forloop.counter == 1 %} checked {% endif %} type="radio" class="custom-control-input" id="{{ value.pk }}" name="feature_{{ feature.pk }}">
-                                <label class="custom-control-label" for="{{ value.pk }}">{{ value.get_value }}</label>
+                                <input value="{{ value.id }}" {% if forloop.counter == 1 %} checked {% endif %} type="radio" class="custom-control-input" id="{{ value.id }}" name="feature_{{ feature_id }}">
+                                <label class="custom-control-label" for="{{ value.id }}">{{ value.name }}</label>
                             </div>
                             {% endfor %}
                     </div>
                 {% endfor %}
+                <div>
+                    {% for message in messages %}
+                        <h4>{{ message }}</h4>
+                    {% endfor %}
+                </div>
                 <div class="d-flex align-items-center mb-4 pt-2">
                     <div class="input-group quantity mr-3" style="width: 130px;">
                         <div class="input-group-btn">
@@ -157,18 +162,31 @@
                                     {% for message in messages %}
                                         <h3>{{ message }}</h3>
                                     {% endfor %}
-                                    <input name="product" type="hidden" value="{{ product.pk }}">
-                                    <div class="d-flex my-3">
-                                        <p class="mb-0 mr-2">Your Rating * :</p>
-                                        <div class="text-primary">
-                                            <input name="rating" type="number" maxlength="5" minlength="1">
+                                    {% if request.user.is_authenticated %}
+                                        <input name="product" type="hidden" value="{{ product.pk }}">
+                                        <input name="user" type="hidden" value="{{ request.user.pk }}">
+                                        <div class="d-flex my-3">
+                                            <p class="mb-0 mr-2">Your Rating * :</p>
+                                            <div class="text-primary">
+                                                <input name="rating" type="number" maxlength="5" minlength="1">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="message">Your Review *</label>
-                                        <textarea name="message" id="message" cols="30" rows="5" class="form-control"></textarea>
-                                    </div>
-                                    {% if not request.user.is_authenticated %}
+                                        <div class="form-group">
+                                            <label for="message">Your Review *</label>
+                                            <textarea name="message" id="message" cols="30" rows="5" class="form-control"></textarea>
+                                        </div>
+                                    {% else %}
+                                        <input name="product" type="hidden" value="{{ product.pk }}">
+                                        <div class="d-flex my-3">
+                                            <p class="mb-0 mr-2">Your Rating * :</p>
+                                            <div class="text-primary">
+                                                <input name="rating" type="number" maxlength="5" minlength="1">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="message">Your Review *</label>
+                                            <textarea name="message" id="message" cols="30" rows="5" class="form-control"></textarea>
+                                        </div>
                                         <div class="form-group">
                                             <label for="name">Your Name *</label>
                                             <input name="name" type="text" class="form-control" id="name">

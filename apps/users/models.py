@@ -13,9 +13,8 @@ class CustomUser(AbstractUser):
     phone_number = models.CharField(max_length=13, validators=[phone_validate], blank=True)
     address1 = models.CharField(max_length=300, blank=True)
     address2 = models.CharField(max_length=300, blank=True)
-    country = models.CharField(max_length=50, blank=True)
+    state = models.CharField(max_length=50, blank=True)
     region = models.CharField(max_length=50, blank=True)
-    district = models.CharField(max_length=50, blank=True)
     zip_code = models.PositiveSmallIntegerField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

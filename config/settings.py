@@ -105,6 +105,8 @@ LANGUAGE_CODE = 'uz'
 
 TIME_ZONE = 'Asia/Tashkent'
 
+LOGIN_URL = 'login_page'
+
 USE_I18N = True
 
 USE_TZ = True

@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from apps.users.models import CustomUser, UserAuthCode
 from apps.users.services import send_email_to_user
 
+
 def register_page(request):
     return render(request, template_name='register.html', context={'error':False})
 
@@ -70,20 +71,24 @@ def register_user(request):
 
 
 def login_page(request):
-    if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home-page')
-        else:
-            messages.error(request, "Lofgin yokiparolni noto'g'ri kirittingiz")
-            return redirect('login_page')
-    else:
+    if request.method != "POST":
         return render(request, 'login.html')
+
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    user = authenticate(request, email=email, password=password)
+    if user is not None:
+        login(request, user)
+        redirect_url = request.POST.get('next')
+        if redirect_url:
+            return redirect(redirect_url)
+        else:
+            return redirect('home-page')
+    else:
+        messages.error(request, "Lofgin yokiparolni noto'g'ri kirittingiz")
+        return redirect('login_page')
 
 
 def logout_page(request):
     logout(request)
-    return redirect('home-page')
+    return redirect(request.META['HTTP_REFERER'])

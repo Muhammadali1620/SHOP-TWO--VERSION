@@ -7,7 +7,7 @@ from apps.users.models import CustomUser
 class Cart(models.Model): 
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     productfeature = models.ForeignKey(ProductFeature, on_delete=models.CASCADE)
-    counts = models.PositiveSmallIntegerField()
+    counts = models.PositiveSmallIntegerField(default=1)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

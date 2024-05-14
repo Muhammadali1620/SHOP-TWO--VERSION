@@ -22,7 +22,7 @@ class Comment(models.Model):
     def save(self, *args, **kwargs):
         normalize_text(self)
         if self.user:
-            self.name, self.email = self.user.name, self.user.email
+            self.name, self.email = self.user.first_name, self.user.email
         super().save(*args, **kwargs)
 
     def __str__(self):

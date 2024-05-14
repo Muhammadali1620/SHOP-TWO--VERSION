@@ -19,10 +19,8 @@ class Command(BaseCommand):
                             phone_number='+998994337104',
                             address1=f'address1 No {i}',
                             address2=f'address2 No {i}',
-                            country=f'country No {i}',
-                            region=f'region No {i}',
-                            district=f'district No {i}',
-                        )
+                            state=f'country No {i}',
+                            region=f'region No {i}',                        )
             for i in range(1, 4)
             for user in CustomUser.objects.all()
         ]

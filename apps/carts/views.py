@@ -1,37 +1,47 @@
 from django.shortcuts import render, redirect
 from apps.carts.models import Cart
 from apps.features.models import ProductFeature
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.contrib import messages
 from apps.general.models import Coupon
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def add_to_cart(request, pk):
     user = request.user
-    if not user.is_authenticated:
-        return redirect('login_page')
     counts = request.POST.get('counts', 1)
     features = [int(request.POST[feature]) for feature in request.POST if feature.startswith('feature_')]
-    product_feaature = ProductFeature.objects.filter(product_id=pk, feature_value__id__in=features).first()
-    if product_feaature:
-        Cart.objects.create(productfeature_id=product_feaature.pk, user_id=user.pk, counts=int(counts))
-    return redirect(request.META['HTTP_REFERER'])
+
+    product_feaatures = ProductFeature.objects.annotate(count=Count('feature_value')).filter(product_id=pk, count=len(features))
+
+    for feature_value_id in features:
+        product_feaatures = product_feaatures.filter(feature_value__id=feature_value_id)
+    if product_feaatures:
+        user_cart, created = Cart.objects.get_or_create(productfeature_id=product_feaatures.first().pk, user_id=user.pk)
+        if created:
+            user_cart.counts = int(counts)
+            user_cart.save()
+            messages.success(request, 'sucsessfuly added to cart')
+        else:
+            messages.error(request, 'this product already to your cart')
+
+    else:
+        messages.error(request, 'product feature does not exst')
+    return redirect('product-detail', pk=pk)
 
 
+@login_required
 def delete_cart(request, pk):
-    user = request.user
-    if not user.is_authenticated:
-        return redirect('login_page')
     obj = Cart.objects.get(pk=pk)
     if obj:
         obj.delete()
     return redirect('cart_page')
 
 
+@login_required
 def cart_page(request):
     user = request.user
-    if not user.is_authenticated:
-        return redirect('login_page')
     carts = Cart.objects.filter(user_id=user.pk).select_related('productfeature')
     price = carts.values('productfeature__price', 'counts')
     subtotal = []
@@ -49,6 +59,7 @@ def cart_page(request):
         if coupon:
             request.session['amount'] = int(coupon[0])
             request.session['is_percent'] = coupon[1]
+            request.session['code'] = coupon_code            
             messages.success(request, 'Your coupon is activate')
             if coupon[1]:
                 subamount = sum(subtotal) / 100 * coupon[0]
