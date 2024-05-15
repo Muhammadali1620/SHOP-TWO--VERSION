@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-    <!-- Checkout Start -->
-    <div class="container-fluid">
+<div class="container-fluid">
+    <form action="{% url 'order' %}" method="post">
+        {% csrf_token %}
         <div class="row px-xl-5">
             <div class="col-lg-8">
                 <div>
@@ -11,65 +12,60 @@
                 </div>
                 <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Billing Address</span></h5>
                 <div class="bg-light p-30 mb-5">
-                    <form action="{% url 'order' %}" method="post">
-                        {% csrf_token    %}
-                        <div class="row">
-                            <input name="user" value="{{ request.user.pk }}" type="hidden">
-                            <input name="payment_method" value="1" type="hidden">
-                            {% if request.session.code %}
-                                <input name="coupon_code" value="{{ request.session.code }}" type="hidden">
-                                <input name="coupon_price" value="{{ request.session.amount }}" type="hidden">
-                                {% if store_data %}
-                                    <input name="total_price" value="{{ store_data.shipping|add:request.session.subamount }}" type="hidden">
-                                {% else %}
-                                    <input name="total_price" value="{{ request.session.subamount }}" type="hidden">
-                                {% endif %}
+                    <div class="row">
+                        <input name="user" value="{{ request.user.pk }}" type="hidden">
+                        {% if request.session.code %}
+                            <input name="coupon_code" value="{{ request.session.code }}" type="hidden">
+                            <input name="coupon_price" value="{{ request.session.amount }}" type="hidden">
+                            {% if store_data %}
+                                <input name="total_price" value="{{ store_data.shipping|add:request.session.subamount }}" type="hidden">
                             {% else %}
-                                <input name="total_price" value="{{ store_data.shipping|add:subtotal }}" type="hidden">
+                                <input name="total_price" value="{{ request.session.subamount }}" type="hidden">
                             {% endif %}
-                            {% if store_data.shipping %}
-                                <input name="delivery_price" value="{{ shipping }}" type="hidden">
-                            {% endif %}
-                            <input name="is_paid" value="True" type="hidden">
-                            <div class="col-md-6 form-group">
-                                <label>First Name</label>
-                                <input class="form-control" name="first_name" type="text" placeholder="John" {% if request.user.first_name %} value="{{ request.user.first_name }} {% endif %}">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Last Name</label>
-                                <input class="form-control" name="last_name" type="text" placeholder="Doe" {% if request.user.last_name %} value="{{ request.user.last_name }} {% endif %}">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>E-mail</label>
-                                <input class="form-control" name="email" type="text" placeholder="example@email.com" {% if request.user.email %} value="{{ request.user.email }} {% endif %}">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Mobile No</label>
-                                <input class="form-control" name="phone_number" type="text" placeholder="+123 456 789" {% if request.user.phone_number %} value="{{ request.user.phone_number }} {% endif %}">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Address Line 1</label>
-                                <input class="form-control" name="address1" type="text" placeholder="123 Street" {% if request.user.address1 %} value="{{ request.user.address1 }} {% endif %}">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>Address Line 2</label>
-                                <input class="form-control" name="address2" type="text" placeholder="123 Street" {% if request.user.address2 %} value="{{ request.user.address2 }} {% endif %}">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>City</label>
-                                <input class="form-control" name="region" type="text" placeholder="New York" {% if request.user.region %} value="{{ request.user.region }} {% endif %}">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>State</label>
-                                <input class="form-control" name="state" type="text" placeholder="New York" {% if request.user.state %} value="{{ request.user.state }} {% endif %}">
-                            </div>
-                            <div class="col-md-6 form-group">
-                                <label>ZIP Code</label>
-                                <input class="form-control" name="zip_code" type="text" placeholder="123" {% if request.user.zip_code %} value="{{ request.user.zip_code }} {% endif %}">
-                            </div>
-                            <button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
+                        {% else %}
+                            <input name="total_price" value="{{ store_data.shipping|add:subtotal }}" type="hidden">
+                        {% endif %}
+                        {% if store_data.shipping %}
+                            <input name="delivery_price" value="{{ shipping }}" type="hidden">
+                        {% endif %}
+                        <input name="is_paid" value="True" type="hidden">
+                        <div class="col-md-6 form-group">
+                            <label>First Name</label>
+                            <input class="form-control" name="first_name" type="text" placeholder="John" {% if request.user.first_name %} value="{{ request.user.first_name }} {% endif %}">
                         </div>
-                    </form>
+                        <div class="col-md-6 form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" name="last_name" type="text" placeholder="Doe" {% if request.user.last_name %} value="{{ request.user.last_name }} {% endif %}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" name="email" type="text" placeholder="example@email.com" {% if request.user.email %} value="{{ request.user.email }} {% endif %}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Mobile No</label>
+                            <input class="form-control" name="phone_number" type="text" placeholder="+123 456 789" {% if request.user.phone_number %} value="{{ request.user.phone_number }} {% endif %}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 1</label>
+                            <input class="form-control" name="address1" type="text" placeholder="123 Street" {% if request.user.address1 %} value="{{ request.user.address1 }} {% endif %}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 2</label>
+                            <input class="form-control" name="address2" type="text" placeholder="123 Street" {% if request.user.address2 %} value="{{ request.user.address2 }} {% endif %}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>City</label>
+                            <input class="form-control" name="region" type="text" placeholder="New York" {% if request.user.region %} value="{{ request.user.region }} {% endif %}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>State</label>
+                            <input class="form-control" name="state" type="text" placeholder="New York" {% if request.user.state %} value="{{ request.user.state }} {% endif %}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>ZIP Code</label>
+                            <input class="form-control" name="zip_code" type="text" placeholder="123" {% if request.user.zip_code %} value="{{ request.user.zip_code }} {% endif %}">
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-4">
@@ -131,29 +127,21 @@
                 <div class="mb-5">
                     <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Payment</span></h5>
                     <div class="bg-light p-30">
-                        <div class="form-group">
-                            <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" name="payment" id="paypal">
-                                <label class="custom-control-label" for="paypal">Paypal</label>
+                        {% for pay in pay_met %}
+                            <div class="form-group">
+                                <div class="custom-control custom-radio">
+                                    <input {% if forloop.counter == 1 %} checked {% endif %} type="radio" class="custom-control-input" name="payment_method" value="{{ pay.pk }}" id="{{ pay.pk }}">
+                                    <label class="custom-control-label" for="{{ pay.pk }}">{{ pay.name }}</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" name="payment" id="directcheck">
-                                <label class="custom-control-label" for="directcheck">Direct Check</label>
-                            </div>
-                        </div>
-                        <div class="form-group mb-4">
-                            <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" name="payment" id="banktransfer">
-                                <label class="custom-control-label" for="banktransfer">Bank Transfer</label>
-                            </div>
-                        </div>
+                        {% endfor %}
+                        <button class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
+</div>
     <!-- Checkout End -->
 
 {% endblock  %}

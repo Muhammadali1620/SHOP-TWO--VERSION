@@ -1,18 +1,16 @@
 from django.shortcuts import render, redirect
 from apps.carts.models import Cart
 from django.contrib.auth.decorators import login_required
-from apps.features.models import ProductFeature
-from apps.general.models import General
+from apps.general.models import General, PaymentMethod
 from apps.orders.forms import OrderCreateForm
 from django.contrib import messages
-
 from apps.orders.models import OrderProduct
-
 
 
 @login_required
 def check_page(request):
     user = request.user
+    pay_met = PaymentMethod.objects.all()
     shipping = 0
     carts = Cart.objects.filter(user=user.pk)
     price = carts.values('productfeature__price', 'counts')
@@ -26,11 +24,13 @@ def check_page(request):
         result = i['productfeature__price'] * i['counts']
         subtotal.append(result)
     context = {
+        'pay_met':pay_met,
         'carts':carts,
         'subtotal':sum(subtotal),
         'shipping':int(shipping)
     }
     return render(request, template_name='checkout.html', context=context)
+
 
 @login_required
 def order(request):
