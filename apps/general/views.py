@@ -22,4 +22,4 @@ def home(request):
         'banners_two':banners_two,
         'banners_three':banners_three,
     }
-    return render(request, template_name='index.html', context=context)  
+    return render(request, template_name='index.html', context=context)

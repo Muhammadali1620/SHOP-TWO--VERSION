@@ -44,6 +44,7 @@
                         <div class="dropdown-menu dropdown-menu-right">
                             {% if request.user.is_authenticated %}
                                 <a href="{% url 'logout_page' %}"><button class="dropdown-item" type="button">Sign Out</button></a>
+                                <a href="{% url 'profil_page' %}"><button class="dropdown-item" type="button">Profil</button></a>
                             {% else %}
                                 <a href="{% url 'login_page' %}"><button class="dropdown-item" type="button">Sign in</button></a>
                                 <a href="{% url 'register-page' %}"><button class="dropdown-item" type="button">Sign up</button></a>

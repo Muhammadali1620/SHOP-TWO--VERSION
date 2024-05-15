@@ -13,9 +13,14 @@ from apps.orders.models import OrderProduct
 @login_required
 def check_page(request):
     user = request.user
+    shipping = 0
     carts = Cart.objects.filter(user=user.pk)
     price = carts.values('productfeature__price', 'counts')
     obj = General.objects.first()
+    if not obj:
+        shipping = 0
+    else:
+        shipping = obj.shipping
     subtotal = []
     for i in price:
         result = i['productfeature__price'] * i['counts']
@@ -23,7 +28,7 @@ def check_page(request):
     context = {
         'carts':carts,
         'subtotal':sum(subtotal),
-        'shipping':int(obj.shipping)
+        'shipping':int(shipping)
     }
     return render(request, template_name='checkout.html', context=context)
 

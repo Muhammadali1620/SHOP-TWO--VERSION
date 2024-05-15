@@ -7,6 +7,8 @@ from django.utils.timezone import now
 from django.shortcuts import render, redirect
 from apps.users.models import CustomUser, UserAuthCode
 from apps.users.services import send_email_to_user
+from django.contrib.auth.decorators import login_required
+from apps.users.forms import CustomUserCreateForm
 
 
 def register_page(request):
@@ -89,6 +91,27 @@ def login_page(request):
         return redirect('login_page')
 
 
+@login_required
 def logout_page(request):
     logout(request)
     return redirect(request.META['HTTP_REFERER'])
+
+
+@login_required
+def profil_page(request):
+    form = CustomUserCreateForm(instance=request.user)
+    return render(request, template_name='profil.html', context={'form': form})
+
+
+@login_required
+def profil_crud(request):
+    if request.method != 'POST':
+        return redirect('profil_page')
+
+    form = CustomUserCreateForm(data=request.POST, instance=request.user)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Your new profile has been saved.')
+    else:
+        messages.error(request, form.errors)
+    return redirect('profil_page')

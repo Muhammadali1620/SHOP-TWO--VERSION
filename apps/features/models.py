@@ -28,7 +28,7 @@ class Feature(models.Model):
     def clean(self):
         if (bool(self.main_category) + bool(self.sub_category)) != 1:
             raise ValidationError('Bitta Category ni tanla')
-        
+
     def get_name(self):
         return getattr(self, f'name_{get_language()}')
     

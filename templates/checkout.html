@@ -19,7 +19,11 @@
                             {% if request.session.code %}
                                 <input name="coupon_code" value="{{ request.session.code }}" type="hidden">
                                 <input name="coupon_price" value="{{ request.session.amount }}" type="hidden">
-                                <input name="total_price" value="{{ store_data.shipping|add:request.session.subamount }}" type="hidden">
+                                {% if store_data %}
+                                    <input name="total_price" value="{{ store_data.shipping|add:request.session.subamount }}" type="hidden">
+                                {% else %}
+                                    <input name="total_price" value="{{ request.session.subamount }}" type="hidden">
+                                {% endif %}
                             {% else %}
                                 <input name="total_price" value="{{ store_data.shipping|add:subtotal }}" type="hidden">
                             {% endif %}

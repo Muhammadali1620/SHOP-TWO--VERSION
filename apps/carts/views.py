@@ -69,3 +69,22 @@ def cart_page(request):
         else:
             messages.error(request, 'Copon code is not valid!')
     return render(request, template_name='cart.html', context=context)
+
+
+@login_required
+def update_count(request, pk):
+    if request.method != 'POST':
+        return redirect('cart_page')
+    counts = request.POST.get('counts')
+
+    cart = Cart.objects.get(pk=pk)
+    quant = cart.productfeature.quantity
+
+    if int(counts) > quant:
+        messages.error(request, f'{quant}-limit product')
+    else:
+        cart.counts = counts
+        cart.save()
+        messages.success(request, 'OK')
+
+    return redirect('cart_page')

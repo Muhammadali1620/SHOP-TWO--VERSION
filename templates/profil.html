@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-lg-8">
+            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">YOUR PROFIL</span></h5>
+            <div class="bg-light p-30 mb-5">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+                <form method="post" action="{% url 'profil_crud' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        {% for field in form %}
+                            <div class="col-md-6 form-group">
+                                <label>{{ field.label }}</label>
+                                <input class="form-control" name="{{ field.name }}" value="{{ field.value }}" type="{{ field.field.widget.input_type }}">
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock  %}

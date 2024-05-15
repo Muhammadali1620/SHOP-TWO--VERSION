@@ -7,7 +7,7 @@
             <div class="col-lg-7 mb-5">
                 <div id="success">
                     {% for message in messages %}
-                        <h3 style="color:{% if message.level == 25  %}green{% else %}red{% endif %};">{{ message }}</h3>
+                        <h3 style="color: {% if message.level == 25  %} green {% else %} red {% endif %};">{{ message }}</h3>
                     {% endfor %}
                 </div>
                 <div class="contact-form bg-light p-30"> 

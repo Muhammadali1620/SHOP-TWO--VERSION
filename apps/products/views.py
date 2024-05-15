@@ -13,10 +13,16 @@ from django.contrib.auth.decorators import login_required
 
 
 def product_list(request):
+    sort = request.GET.get('sort', '2')
+    ordering = '-pk'
+    if sort == '1':
+        ordering = '?'
+    if sort == '3':
+        ordering = '-rating'
     feature_values = request.GET.getlist('feature_values')
     select_sub_cat_id = request.GET.get('sub_category', '0')
     query = request.GET.get('query', '')
-    products = Product.objects.filter(product_features__isnull=False).distinct().order_by('-pk')
+    products = Product.objects.filter(product_features__isnull=False).distinct().order_by(ordering)
     if query != '':
         request.session['query'] = query
     else:

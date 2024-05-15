@@ -11,5 +11,5 @@ def get_usd_price():
 
 
 def change_product_avg_rating(product_id):
-   rating = Comment.objects.filter(product_id=product_id).aggregate(Avg('rating'))['rating_avg']
+   rating = Comment.objects.filter(product_id=product_id).aggregate(rat_avg = Avg('rating'))['rat_avg']
    Product.objects.filter(pk=product_id).update(rating=rating)

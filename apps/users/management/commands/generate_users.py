@@ -1,4 +1,3 @@
-from typing import Any
 from django.core.management import BaseCommand
 from apps.users.models import CustomUser
 
